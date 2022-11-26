@@ -486,11 +486,13 @@ def init_distributed_mode(args):
         sys.exit(1)
 
     dist.init_process_group(
-        backend="nccl",
+        backend="gloo", #changed to gloo
         init_method=args.dist_url,
         world_size=args.world_size,
         rank=args.rank,
     )
+
+    args.gpu = 0 # forcing gpu index , because by default it detected wrong index
 
     torch.cuda.set_device(args.gpu)
     print('| distributed init (rank {}): {}'.format(
